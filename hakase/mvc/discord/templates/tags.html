@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/tags.css"></link>
+    <link href='https://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet'>
+    <script src="https://kit.fontawesome.com/db8c487bb7.js" crossorigin="anonymous"></script>
+  </head>
+  <h1>Tag Role Interface</h1>
+  {% if not guilds %}
+    You are not a member of a guild which has tag roles.
+  {% else %}
+    <h3>Here, you can edit your tag roles. Mouse over the roles to see their descriptions.</h3><br>
+    <h3>{{ status }}</h3>
+    <select name="Guild" id="selected_guild" onchange="handleChange()">
+      {% for id, guild in guilds.items %}
+        <option value="{{ id }}">{{ guild.name }}</option>
+      {% endfor %}
+    </select><br><br>
+    
+    {% for id, guild in guilds.items %}
+    <form action="" method="POST" id="{{ id }}">{% csrf_token %}
+      <input type="hidden" name="guild" value="{{ id }}">
+      {% for rid, tag in guild.tag_roles.items %}
+      <input type="checkbox" id="{{ rid }}" name="{{ rid }}"{% if tag.enabled %}checked{% endif %}>
+      <div class="tooltip">
+        <label for="{{ rid }}" class="taglabel" style="color:{{ tag.color }}"><strong>{{ tag.name }}</strong></label>
+        <span class="tooltiptext">{{ tag.description }}</span>
+      </div><br>
+      {% endfor %}
+      <br><button type="submit">Set</button>
+    </form>
+    {% endfor %}
+  {% endif %}
+  <script src="/static/js/tags.js"></script>
+</html>

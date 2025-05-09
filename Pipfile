@@ -1,0 +1,48 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+hikari-miru = "*"
+colorlog = "*"
+uvicorn = "*"
+toml = "*"
+plotly = "*"
+numpy = "*"
+pillow = "*"
+aiohttp = "*"
+bs4 = "*"
+lxml = "*"
+matplotlib = "*"
+pint = "*"
+faust-cchardet = "*"
+orjson = "*"
+py-expression-eval = "*"
+fernet = "*"
+python-pidfile = "*"
+filetype = "*"
+setproctitle = "*"
+psycopg2-binary = "*"
+kaleido = "*"
+mutagen = "*"
+uvloop = "*"
+click = "*"
+marshmallow = "*"
+tornado = "*"
+setuptools = "*"
+namespace = "*"
+ruff = "*"
+anytree = "*"
+pyfiglet = "*"
+lolpython = "*"
+httpx = "*"
+django = "*"
+hikari-lightbulb = ">=3.0.0a21"
+hikari = {extras = ["speedups"], version = "*"}
+pyment = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

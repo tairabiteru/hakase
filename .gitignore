@@ -1,0 +1,10 @@
+.venv/**
+.ruff_cache/**
+db_backups/**
+**/__pycache__/**
+**/migrations/**
+logs/**
+deps.txt
+uploads/**
+*.toml
+hakase.sh

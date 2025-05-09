@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/services.css"></link>
+    <script src="https://kit.fontawesome.com/db8c487bb7.js" crossorigin="anonymous"></script>
+  </head>
+
+  <div id="main">
+    <div class="service">
+      <h1>What's this?</h1>
+      Services are components {{ bot_name }} can offer to members of the server. These can be used with service commands to get Farore to automatically start and stop servers for members of the server.
+    </div>
+    <body>
+        {% for service in services %}
+            <div class="service">
+                <h2>{{ service.name }}</h2>
+                {{ service.description }}
+            </div>
+        {% endfor %}
+
+    </body>
+  </div>
+  <script src="/static/js/index.js"></script>
+</html>

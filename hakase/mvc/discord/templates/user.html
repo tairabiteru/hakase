@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/toastr-2.1.4.min.css">
+    <link rel="stylesheet" href="/static/css/user.css">
+    <link href='https://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet'>
+  </head>
+  <h1>User Settings</h1>
+  <h3>Welcome, {{ user.username }}!</h3>
+  
+  {% csrf_token %}
+  <div class="box">
+    <img src="{{ user.avatar_url }}" class="avatar">
+    <h3>General</h3>
+    <div class="tooltip">
+      <label for="birthday">Birthday</label>
+      <input type="date" id="birthday" value="{{ user.general.birthday }}" onchange="save(this)">
+      <span class="tooltiptext">{{ user.general.birthday_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="profile_clip">Profile Clip</label>
+      <select id="profile_clip" onchange="save(this)">
+        <option value="">-- None --</option>
+        {% for clip in profile_clips %}
+        <option value="{{ clip.name }}"{% if user.general.profile_clip == clip.name %}selected{% endif %}>{{ clip.name }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.general.profile_clip_desc }}</span>
+    </div>
+  </div>
+  <div class="box">
+    <h3>Locale</h3>
+    <div class="tooltip">
+      <label for="timezone">Timezone</label>
+      <select id="timezone" onchange="save(this)">
+        {% for timezone in timezones %}
+        <option value="{{ timezone }}"{% if timezone == user.locale.timezone %}selected{% endif %}>{{ timezone }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.timezone_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="location">Location</label>
+      <input type="text" id="location" value="{{ user.locale.location }}" onchange="save(this)">
+      <span class="tooltiptext">{{ user.locale.location_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="date_format">Date Format</label>
+      <select id="date_format" onchange="save(this)">
+        {% for format in date_formats %}
+        <option value="{{ format.0 }}"{% if format.0 == user.locale.date_format %}selected{% endif %}>{{ format.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.date_format_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="time_format">Time Format</label>
+      <select id="time_format" onchange="save(this)">
+        {% for format in time_formats %}
+        <option value="{{ format.0 }}"{% if format.0 == user.locale.time_format %}selected{% endif %}>{{ format.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.time_format_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="temperature_unit">Temperature Unit</label>
+      <select id="temperature_unit" onchange="save(this)">
+        {% for unit in temperature_units %}
+        <option value="{{ unit.0 }}"{% if unit.0 == user.locale.temperature_unit %}selected{% endif %}>{{ unit.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.temperature_unit_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="distance_unit">Distance Unit</label>
+      <select id="distance_unit" onchange="save(this)">
+        {% for unit in distance_units %}
+        <option value="{{ unit.0 }}"{% if unit.0 == user.locale.distance_unit %}selected{% endif %}>{{ unit.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.distance_unit_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="elevation_unit">Elevation Unit</label>
+      <select id="elevation_unit" onchange="save(this)">
+        {% for unit in elevation_units %}
+        <option value="{{ unit.0 }}"{% if unit.0 == user.locale.elevation_unit %}selected{% endif %}>{{ unit.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.elevation_unit_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="pressure_unit">Pressure Unit</label>
+      <select id="pressure_unit" onchange="save(this)">
+        {% for unit in pressure_units %}
+        <option value="{{ unit.0 }}"{% if unit.0 == user.locale.pressure_unit %}selected{% endif %}>{{ unit.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.pressure_unit_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="speed_unit">Speed Unit</label>
+      <select id="speed_unit" onchange="save(this)">
+        {% for unit in speed_units %}
+        <option value="{{ unit.0 }}"{% if unit.0 == user.locale.speed_unit %}selected{% endif %}>{{ unit.1 }}</option>
+        {% endfor %}
+      </select>
+      <span class="tooltiptext">{{ user.locale.speed_unit_desc }}</span>
+    </div>
+  </div>
+  <div class="box">
+    <h3>Genshin</h3>
+    <div class="tooltip">
+      <label for="notify_na">Notify for American Codes</label>
+      <input type="checkbox" id="gi_notify_na" onchange="save(this)" {% if user.genshin.notify_na %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.genshin.notify_na_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="notify_eu">Notify for European Codes</label>
+      <input type="checkbox" id="gi_notify_eu" onchange="save(this)" {% if user.genshin.notify_eu %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.genshin.notify_eu_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="gi_notify_sea">Notify for SEA Codes</label>
+      <input type="checkbox" id="notify_sea" onchange="save(this)" {% if user.genshin.notify_sea %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.genshin.notify_sea_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="notify_primos_only">Primogems Only</label>
+      <input type="checkbox" id="notify_primos_only" onchange="save(this)" {% if user.genshin.primos_only %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.genshin.primos_only_desc }}</span>
+    </div>
+    <br>
+  </div>
+  <div class="box">
+    <h3>Honkai Star Rail</h3>
+    <div class="tooltip">
+      <label for="hsr_notify_na">Notify for American Codes</label>
+      <input type="checkbox" id="hsr_notify_na" onchange="save(this)" {% if user.hsr.notify_na %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.hsr.notify_na_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="hsr_notify_eu">Notify for European Codes</label>
+      <input type="checkbox" id="hsr_notify_eu" onchange="save(this)" {% if user.hsr.notify_eu %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.hsr.notify_eu_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="hsr_notify_sea">Notify for SEA Codes</label>
+      <input type="checkbox" id="hsr_notify_sea" onchange="save(this)" {% if user.hsr.notify_sea %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.hsr.notify_sea_desc }}</span>
+    </div>
+    <br>
+    <div class="tooltip">
+      <label for="notify_stellar_jade_only">Stellar Jade Only</label>
+      <input type="checkbox" id="notify_stellar_jade_only" onchange="save(this)" {% if user.hsr.primos_only %}checked{% endif %}>
+      <span class="tooltiptext">{{ user.hsr.primos_only_desc }}</span>
+    </div>
+    <br>
+  </div>
+  <script src="/static/js/jquery-3.6.4.min.js"></script>
+  <script src="/static/js/toastr-2.1.4.min.js"></script>
+  <script src="/static/js/user.js"></script>
+</html>

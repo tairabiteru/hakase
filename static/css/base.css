@@ -1,0 +1,15 @@
+body {
+  margin: auto;
+  align-items: center;
+  justify-content: center; }
+
+header {
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: auto; }
+
+h1 {
+  font-size: 4vw;
+  color: white;
+  font-family: 'arial';
+  margin: 0px;
+  text-shadow: -3px 3px rgba(255, 255, 255, 0.5); }
