@@ -27,7 +27,7 @@ import toml
 from .custom_fields import Timezone, ExistingPath, DiscordUID, LogLevel, TCPIPPort
 
 
-__VERSION__: str = "0.1.0α"
+__VERSION__: str = "0.1.0"
 __TAG__: str = "Adaptable Altruist"
 
 
