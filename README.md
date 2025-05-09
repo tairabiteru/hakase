@@ -1,6 +1,4 @@
 # Hakase
-
-## History
 Hakase is a general purpose Discord bot designed for the [Guild of Library Makers](https://www.guildoflibrarymakers.com/). Like many of my bots, she is based on a framework developed for my personal bot, Farore.
 
 
