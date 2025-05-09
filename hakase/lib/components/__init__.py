@@ -7,6 +7,7 @@ things defined here serve that purpose in some way or another.
 """
 from .pagination import pagify
 from .validation import Validation, validate, lint_before_exc
+from .onboarding import WelcomeView, WelcomeModal
 
 
 __all__ = [
@@ -14,4 +15,6 @@ __all__ = [
     "validate",
     "lint_before_exc",
     "pagify",
+    "WelcomeView",
+    "WelcomeModal"
 ]

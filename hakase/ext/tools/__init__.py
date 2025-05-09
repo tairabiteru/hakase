@@ -16,6 +16,7 @@ from ...lib.ctx import as_embed
 from ...lib.timer import BackgroundTimer, BackgroundTimerError
 from ...mvc.discord.models import User, Locale
 from ...mvc.reminders.models import Reminder
+from ...lib.components import WelcomeView
 
 
 conf = Config.load()
@@ -29,7 +30,6 @@ class Ping(
     name="ping",
     description=f"See if {conf.name} is alive."
 ):
-
 
     @lightbulb.invoke
     async def invoke(self, ctx: lightbulb.Context):
@@ -400,3 +400,22 @@ class Remind(
         )
         time = locale.aslocaltime_format(reminder.time)
         await ctx.respond(f"Reminder set for {time}.")
+
+
+@tools.command
+class Welcome(
+    lightbulb.SlashCommand,
+    name="welcome",
+    description=f"Perform GOLM member onboarding."
+):
+    
+    @lightbulb.invoke
+    async def invoke(self, ctx: lightbulb.Context) -> None:
+        view = WelcomeView()
+        await ctx.respond(
+            embed=WelcomeView.get_embed(),
+            components=view.build(),
+            flags=hikari.MessageFlag.EPHEMERAL
+        )
+        ctx.client.app.miru.start_view(view)
+        
