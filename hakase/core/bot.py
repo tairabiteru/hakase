@@ -27,6 +27,41 @@ from ..mvc.starboard.models import Starboard
 
 
 class Bot(hikari.GatewayBot):
+    """
+    The bot. Not much more to say.
+
+    Okay, that's a lie. The bot object is the core application here. It is the
+    beginning and end of all execution in this program, and it contains methods
+    required to access the Discord API.
+
+    Attributes
+    ----------
+    conf : Config
+        The bot's configuration.
+    logger : logging.Logger
+        The bot's logger, available for convenience.
+    last_instatiation : datetime.datetime
+        The last time the bot object was instantiated. This is NOT the last
+        time the bot was connected to the API.
+    last_connection : datetime.datetime
+        The last time the bot was connected to the Discord API. None if it
+        isn't connected.
+    revision : Revision
+        The bot's latest revision. Initializes to None, but is set through
+        the internal revisioning system upon successful boot.
+    permissions_root : Node
+        The root node of the bot's permissions tree. Initializes to None, but
+        is set when the tree is resolved upon boot.
+    lightbulb : lightbulb.Client
+        Lightbulb's client, command handler.
+    miru : miru.Client
+        Miru's client, component handler.
+    http_daemon : HTTPDaemon
+        The bot's internal web server. Initializes to None, but then is set
+        upon successful boot. Remains None if the daemon is disabled in config.
+    
+
+    """
     def __init__(self, conf):
         self.conf: Config = conf
         super().__init__(conf.token, intents=hikari.Intents.ALL)
@@ -165,16 +200,20 @@ class Bot(hikari.GatewayBot):
         """
         Restart or kill hakase.
         
-        Args:
-            ctx (lightbulb.Context): The context if this call is coming
-                from a command.
-            kill (bool): If True, hakase will not restart afterwards.
-
-
-        hakase by default will restart herself when this is called. The
-        external bash script checks for the presence of a file named "lock"
-        in her root directory. If present, the bash script will exit the
-        infinite loop it is in, resulting in a permanent shutdown.
+        Hakase by default will restart herself when execution is halted.
+        This is because she runs in a Systemd service which automatically restarts
+        execution, but while doing so, she checks for the presence of a file named
+        "lock" in her root directory. If present, she will not allow herself to
+        restart, and instead will exit permanently.
+        
+        Parameters
+        ----------
+        ctx : lightbulb.Context
+            The context in which this method was called, if any. This is used
+            exclusively in commands.
+        kill : boolean
+            Whether or not this command will halt execution. If True, it will.
+            If False, the command will instead restart the bot.
         """
         if kill is True:
             f = await aiofile.async_open(os.path.join(self.conf.root, "lock"), "w")

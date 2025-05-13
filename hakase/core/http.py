@@ -27,6 +27,12 @@ uvicorn.config.LOGGING_CONFIG['loggers']['uvicorn.access']['handlers'] = ['file'
 
 
 class HTTPDaemon(uvicorn.Server):
+    """
+    The bot's internal HTTP Daemon.
+
+    This is just a Uvicorn server, but we overload some stuff here
+    to stop the signal handlers from working.
+    """
     def install_signal_handlers(self) -> None:
         """Overload this because they mess with the signal handlers."""
         pass
@@ -59,7 +65,7 @@ class HTTPDaemon(uvicorn.Server):
             loop=loop
         )
 
-        http_daemon: cls = cls(config)
+        http_daemon = cls(config)
         loop.create_task(http_daemon.serve())
 
         bot.logger.info(f"Started internal ASGI webserver on {conf.mvc.host}:{conf.mvc.port}.")

@@ -13,12 +13,14 @@ from marshmallow import fields, validate, ValidationError
 
 
 class Timezone(fields.Str):
+    """A field containing a zoneinfo timezone."""
     def __init__(self, *args, **kwargs):
         kwargs['validate'] = validate.OneOf(zoneinfo.available_timezones())
         super().__init__(*args, **kwargs)
 
 
 class LogLevel(fields.Str):
+    """A field containing a log level."""
     LEVELS = [
         "DEBUG",
         "INFO",
@@ -33,18 +35,21 @@ class LogLevel(fields.Str):
 
 
 class DiscordUID(fields.Int):
+    """A field containing a Discord user ID."""
     def __init__(self, *args, **kwargs):
         kwargs['validate'] = validate.Range(min=100000000000000000, max=999999999999999999)
         super().__init__(*args, **kwargs)
 
 
 class TCPIPPort(fields.Int):
+    """A field containing a TCP/IP port."""
     def __init__(self, *args, **kwargs):
         kwargs['validate'] = validate.Range(min=0, max=65535)
         super().__init__(*args, **kwargs)
 
 
 class ExistingPath(fields.Str):
+    """A field containing a POSIX path which exists."""
     def __init__(self, *args, **kwargs):
         self.create = kwargs.pop("create", False)
         kwargs['validate'] = self.validator
