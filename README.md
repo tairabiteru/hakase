@@ -14,9 +14,9 @@ Hakase makes use of the following technologies:
 
 ## FAQ
 
-- **Does this support Windows?** - No. Linux only.
+- **Does this use AI?** - Nope, she's a 100% organic, free range Discord bot, written by hand by someone who's been smacking his head against his desk for the last 10 years, also known as "coding."
 
-- ***CAN* you support Windows?** - No.
+- **Can this run on Windows?** - No. Linux only.
 
 - **Why not?** - ~~Because Microsoft smells :^)~~ Because the framework Hakase runs on is built upon Linux specific technologies, Systemd and bash to name examples. My server runs Linux and will probably only ever run Linux, so there's no reason for me to support other environments. 
 

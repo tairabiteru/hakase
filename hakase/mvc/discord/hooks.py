@@ -41,6 +41,10 @@ class DiscordEventHandler:
             except User.DoesNotExist:
                 user = User(id=event.user.id)
                 await user.asave()
+            
+            guild = await Guild.objects.aget(id=event.guild_id)
+            if guild.greeting is not None:
+                await guild.greet(event)
 
     @staticmethod
     @handle_events(hikari.RoleEvent)

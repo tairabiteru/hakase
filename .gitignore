@@ -8,3 +8,4 @@ deps.txt
 uploads/**
 *.toml
 hakase.sh
+pidfile
