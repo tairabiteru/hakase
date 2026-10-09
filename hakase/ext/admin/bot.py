@@ -6,6 +6,7 @@ import sys
 from ...core.conf import Config
 from ...lib.utils import get_byte_unit, get_dir_size
 from ...mvc.internal.models import Revision
+from ...lib.hooks import require_granted
 
 
 conf = Config.load()
@@ -42,3 +43,15 @@ class Info(
         heartbeat_info = f"Period: {latency} ms\nFrequency: {frequency} Hz"
         embed.add_field("Heartbeat Info", value=heartbeat_info)
         await ctx.respond(embed)
+
+
+@bot.register
+class Doit(
+    lightbulb.SlashCommand,
+    name="doit",
+    description="Do it.",
+    hooks=[require_granted]
+):
+    @lightbulb.invoke
+    async def invoke(self, ctx: lightbulb.Context) -> None:
+        await ctx.respond("Doing it!")

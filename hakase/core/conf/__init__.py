@@ -29,7 +29,7 @@ import toml
 from .custom_fields import Timezone, ExistingPath, DiscordUID, LogLevel, TCPIPPort
 
 
-__VERSION__: str = "0.3.0"
+__VERSION__: str = "0.3.1"
 __TAG__: str = "Adaptable Altruist"
 
 
@@ -220,7 +220,7 @@ class Config(SimpleNamespace):
     @property
     def root_dir(self) -> str:
         """Resolves to the bot's root directory."""
-        return Path(__file__).resolve().parent.parent.parent.parent
+        return str(Path(__file__).resolve().parent.parent.parent.parent)
 
     @property
     def log_dir(self) -> str:
