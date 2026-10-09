@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 import sys
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent))
 
 from hakase.core.conf import Config
@@ -50,9 +51,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "hakase.mvc.discord",
-    "hakase.mvc.starboard",
     "hakase.mvc.internal",
     "hakase.mvc.reminders",
+    "hakase.mvc.golmdirectory",
 ]
 
 MIDDLEWARE = [
@@ -63,10 +64,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "hakase.mvc.discord.middleware.BotInjectorMiddleware"
+    "hakase.mvc.discord.middleware.BotInjectorMiddleware",
 ]
 
-SESSION_ENGINE  = "django.contrib.sessions.backends.file"
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
 SESSION_FILE_PATH = conf.temp
 
 ROOT_URLCONF = "hakase.mvc.core.urls"
@@ -100,7 +101,7 @@ DATABASES = {
         "USER": conf.mvc.db_user,
         "PASSWORD": conf.mvc.db_pass,
         "HOST": conf.mvc.db_host,
-        "PORT": conf.mvc.db_port
+        "PORT": conf.mvc.db_port,
     }
 }
 
@@ -149,14 +150,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 def configure():
+    import copy
+
     import django
     from django.conf import settings
-    import copy
 
     vars = globals()
     temp = copy.copy(vars)
     for key in temp.keys():
-        if any([char in 'abcdefghijklmnopqrstuvwxyz' for char in key]):
+        if any([char in "abcdefghijklmnopqrstuvwxyz" for char in key]):
             vars.pop(key)
 
     settings.configure(**vars)

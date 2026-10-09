@@ -32,6 +32,7 @@ admin.site.site_header = f"{conf.name} Administration"
 urlpatterns = [
     path("", index),
     path("discord/", include("hakase.mvc.discord.urls")),
+    path("directory/", include("hakase.mvc.golmdirectory.urls")),
     path("admin/", admin.site.urls),
     path('favicon.ico', favicon),
 ]

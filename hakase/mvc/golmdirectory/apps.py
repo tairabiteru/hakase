@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StarboardConfig(AppConfig):
+class InternalConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "hakase.mvc.starboard"
+    name = "hakase.mvc.golmdirectory"

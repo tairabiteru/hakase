@@ -13,7 +13,10 @@ class AccessIsDenied(PermissionError):
     def __init__(self, ctx: lightbulb.Context, reason: str):
         self.reason = reason
         self.ctx = ctx
-    
+
     async def respond(self):
-        await self.ctx.respond(f"**Access is denied**: {self.reason}")
-    
+        await self.ctx.respond(self.message)
+
+    @property
+    def message(self) -> str:
+        return f"**Access is denied**: {self.reason}"

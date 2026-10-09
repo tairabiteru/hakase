@@ -7,10 +7,12 @@ periodically executed as apart of her natural behavior in the background.
 import hikari
 
 from .reminders import check_reminders
+from .dbm import close_old_db_connections
 
 
 __all__ = [
-    check_reminders
+    check_reminders,
+    close_old_db_connections
 ]
 
 

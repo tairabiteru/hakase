@@ -23,7 +23,7 @@ from ..daemons import run_daemons
 from ..mvc.discord.hooks import DiscordEventHandler
 from ..mvc.discord.models import Channel, RoleGroup
 from ..mvc.internal.models import OperationalVariables, Revision
-from ..mvc.starboard.models import Starboard
+from ..mvc.golmdirectory.models import Library
 
 
 class Bot(hikari.GatewayBot):
@@ -59,7 +59,7 @@ class Bot(hikari.GatewayBot):
     http_daemon : HTTPDaemon
         The bot's internal web server. Initializes to None, but then is set
         upon successful boot. Remains None if the daemon is disabled in config.
-    
+
 
     """
     def __init__(self, conf):
@@ -77,7 +77,7 @@ class Bot(hikari.GatewayBot):
         # Handle lightbulb
         self.lightbulb: lightbulb.Client = lightbulb.client_from_app(self, hooks=[require_not_denied])
         self.lightbulb.error_handler(self._on_exc_pipeline_error)
-        
+
         # Handle miru
         self.miru: miru.Client = miru.Client(self)
 
@@ -96,7 +96,9 @@ class Bot(hikari.GatewayBot):
 
         # These events allow the MVC to track guild activity.
         self.subscribe(hikari.MemberUpdateEvent, RoleGroup.process_event)
-        self.subscribe(hikari.GuildReactionAddEvent, Starboard.process_event)
+
+        # This event allows Hakase to mention members of a library.
+        self.subscribe(hikari.MessageCreateEvent, Library.handle_lib_mention_event)
 
     async def _load_command_handler(self, _) -> None:
         """Load Lightbulb."""
@@ -104,11 +106,11 @@ class Bot(hikari.GatewayBot):
 
         await self.lightbulb.start()
         load_injection_for_commands(self.lightbulb)
-    
+
     async def _on_exc_pipeline_error(self, exc: lightbulb.exceptions.ExecutionPipelineFailedException) -> bool:
         """
         Callback for execution pipeline errors.
-        
+
         These occur when execution of a command fails for whatever reason.
         """
         if isinstance(exc.causes[0], AccessIsDenied):
@@ -143,7 +145,7 @@ class Bot(hikari.GatewayBot):
                 await self.rest.create_message(opvars.reinit_channel.id, message)
 
             await OperationalVariables.clear_for_reinit()
-    
+
     async def _on_ready(self, _: hikari.ShardReadyEvent) -> None:
         """
         Handle ShardReadyEvent, completing initialization.
@@ -160,9 +162,9 @@ class Bot(hikari.GatewayBot):
         self.is_ready.set()
 
         await self._on_reinit()
-        
+
         run_daemons(self)
-    
+
     def print_banner(self, *args, **kwargs):
         """Overload banner with hakase's logo."""
         font = "ANSI Shadow"
@@ -172,7 +174,7 @@ class Bot(hikari.GatewayBot):
         lolpython.lol_py(f.renderText(self.conf.name))
         lolpython.lol_py(f"{self.conf.version.number} '{self.conf.version.tag}'")
         print("")
-    
+
     @property
     def timezone(self) -> zoneinfo.ZoneInfo:
         """Timezone of hakase herself."""
@@ -195,17 +197,17 @@ class Bot(hikari.GatewayBot):
         if self._permissions_root is None:
             raise RuntimeError("Permissions root has not been set yet.")
         return self._permissions_root
-    
+
     async def close(self, ctx=None, kill=False) -> None:
         """
         Restart or kill hakase.
-        
+
         Hakase by default will restart herself when execution is halted.
         This is because she runs in a Systemd service which automatically restarts
         execution, but while doing so, she checks for the presence of a file named
         "lock" in her root directory. If present, she will not allow herself to
         restart, and instead will exit permanently.
-        
+
         Parameters
         ----------
         ctx : lightbulb.Context

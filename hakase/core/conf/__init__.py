@@ -15,6 +15,8 @@ generated upon first initialization which defines operational settings for Hakas
     * Config - Class which constructs the config namespace
 """
 
+from email.policy import default
+
 import aiofile
 import fernet
 import os
@@ -27,7 +29,7 @@ import toml
 from .custom_fields import Timezone, ExistingPath, DiscordUID, LogLevel, TCPIPPort
 
 
-__VERSION__: str = "0.2.0"
+__VERSION__: str = "0.3.0"
 __TAG__: str = "Adaptable Altruist"
 
 
@@ -43,7 +45,7 @@ class LoggingConfigSchema(BaseConfig):
 
     All attributes suffixed with "_level" are enums, essentially,
     and can contain one of 'INFO', 'DEBUG', 'WARNING', or 'CRITICAL'.
-    
+
     Attributes
     ----------
     main_level : str
@@ -71,7 +73,7 @@ class ORMConfigSchema(BaseConfig):
     The Object Relational Mapper is the component of the bot which is
     tasked with storing data, but it also controls the model-view controller
     in general.
-    
+
     Attributes
     ----------
     enable_http : boolean
@@ -138,6 +140,7 @@ class VarsConfigSchema(BaseConfig):
         The amount of time in seconds before an identical /choose command can be run.
     """
     choose_cmd_expiry_seconds = fields.Int(dump_default=3600, required=True)
+    library_mention_roles = fields.List(fields.Int, required=True)
 
 
 class ConfigSchema(BaseConfig):
@@ -157,7 +160,7 @@ class ConfigSchema(BaseConfig):
         A POSIX path indicating the location of the bot's files.
     temp : str
         A POSIX path to a temp folder which the bot can use for processing.
-        It is usually a good idea to set this to a location in /dev/shm, as 
+        It is usually a good idea to set this to a location in /dev/shm, as
         this allows this location to be entirely in RAM, which is much faster
         than a filesystem location.
     logs : str
@@ -203,7 +206,7 @@ class Config(SimpleNamespace):
     Attributes
     ----------
     version : SimpleNamespace
-        The version of the config. Used later to establish the bot's version. 
+        The version of the config. Used later to establish the bot's version.
     daemon : boolean
         Whether or not the bot should run as a daemon. This is overwritten by
         sys.argv later.
@@ -213,21 +216,21 @@ class Config(SimpleNamespace):
         # To be overriden by sys.argv.
         self.daemon: bool = False
         super().__init__(**entries)
-    
+
     @property
     def root_dir(self) -> str:
         """Resolves to the bot's root directory."""
         return Path(__file__).resolve().parent.parent.parent.parent
-    
+
     @property
     def log_dir(self) -> str:
         return self.logs
-    
+
     @property
     def asset_dir(self) -> str:
         """Location where assets are stored."""
         return os.path.join(self.root, "assets/")
-    
+
     @property
     def bin_dir(self) -> str:
         """Location of binary utilities."""
@@ -243,7 +246,7 @@ class Config(SimpleNamespace):
         mandate that it must be the first one.
         """
         return self.mvc.allowed_hosts[0]
-    
+
     @classmethod
     def from_dict(cls, d):
         for key, value in d.items():
@@ -252,7 +255,7 @@ class Config(SimpleNamespace):
             elif isinstance(value, list):
                 d[key] = cls.from_list(value)
         return cls(**d)
-    
+
     @classmethod
     def from_list(cls, config_list):
         for i, value in enumerate(config_list):
@@ -261,7 +264,7 @@ class Config(SimpleNamespace):
             elif isinstance(value, dict):
                 config_list[i] = cls.from_dict(value)
         return config_list
-    
+
     @classmethod
     async def aload(self):
         """
@@ -278,7 +281,7 @@ class Config(SimpleNamespace):
             async with aiofile.async_open('conf.toml', mode='w') as config_file:
                 await config_file.write(toml.dump(config_dict, config_file))
             return ConfigSchema().load(config_dict)
-    
+
     @classmethod
     def load(self, orm=False):
         """
@@ -306,7 +309,7 @@ class Config(SimpleNamespace):
             with open("conf.toml", "w") as config_file:
                 toml.dump(config_dict, config_file)
             conf = ConfigSchema().load(config_dict)
-        
+
         if orm is True:
             from hakase.mvc.core.settings import configure
             configure()
