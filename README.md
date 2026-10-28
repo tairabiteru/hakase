@@ -5,7 +5,7 @@ Hakase is a general purpose Discord bot designed for the [Guild of Library Maker
 ## What's she made of?
 Hakase makes use of the following technologies:
 
-- [Python](https://www.python.org/) 3.12
+- [Python](https://www.python.org/) 3.14
 - [Hikari](https://www.hikari-py.dev/)
 - [Lightbulb](https://hikari-lightbulb.readthedocs.io/en/latest/#)
 - [Miru](https://hikari-miru.readthedocs.io/en/latest/index.html)
