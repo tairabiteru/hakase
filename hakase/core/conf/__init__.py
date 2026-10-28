@@ -14,9 +14,6 @@ generated upon first initialization which defines operational settings for Hakas
     * ConfigSchema - Schema defining the entire configuration
     * Config - Class which constructs the config namespace
 """
-
-from email.policy import default
-
 import aiofile
 import fernet
 import os
@@ -29,7 +26,7 @@ import toml
 from .custom_fields import Timezone, ExistingPath, DiscordUID, LogLevel, TCPIPPort
 
 
-__VERSION__: str = "0.3.1"
+__VERSION__: str = "0.4.0"
 __TAG__: str = "Adaptable Altruist"
 
 

@@ -27,7 +27,8 @@ class Info(
 
         embed = hikari.Embed(title=conf.name, url=f"https://{conf.mvc.allowed_hosts[0]}")
         embed.description = f"**Version {version.full_version}**\nRunning on {platform.python_implementation()} {python_version}"
-        embed.set_thumbnail(ctx.client.app.get_me().avatar_url)
+        guild = await ctx.client.app.rest.fetch_guild(ctx.guild_id)
+        embed.set_thumbnail(guild.get_my_member().make_avatar_url())
 
         lines = "{:,}".format(version.lines)
         chars = "{:,}".format(version.chars)
